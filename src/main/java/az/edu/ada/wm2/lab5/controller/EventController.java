@@ -30,6 +30,15 @@ public class EventController {
         }
     }
 
+    @GetMapping("/filter/tag")
+    public ResponseEntity<List<Event>> getEventsByTag(@RequestParam String tag) {
+        try {
+            return new ResponseEntity<>(eventService.getEventsByTag(tag), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     // 1. CREATE - POST /api/events
     @PostMapping
