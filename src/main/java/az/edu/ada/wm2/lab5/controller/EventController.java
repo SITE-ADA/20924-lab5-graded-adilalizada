@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,33 +19,6 @@ public class EventController {
     @Autowired
     public EventController(EventService eventService) {
         this.eventService = eventService;
-    }
-
-    // CUSTOM FILTER ENDPOINTS (Placed here to avoid /{id} path conflict)
-
-    @GetMapping("/upcoming")
-    public ResponseEntity<List<Event>> getUpcomingEvents() {
-        return new ResponseEntity<>(eventService.getUpcomingEvents(), HttpStatus.OK);
-    }
-
-    @GetMapping("/filter/tag")
-    public ResponseEntity<List<Event>> getEventsByTag(@RequestParam String tag) {
-        return new ResponseEntity<>(eventService.getEventsByTag(tag), HttpStatus.OK);
-    }
-
-    @GetMapping("/filter/price")
-    public ResponseEntity<List<Event>> getEventsByPriceRange(@RequestParam BigDecimal min, @RequestParam BigDecimal max) {
-        return new ResponseEntity<>(eventService.getEventsByPriceRange(min, max), HttpStatus.OK);
-    }
-
-    @PatchMapping("/{id}/price")
-    public ResponseEntity<Event> updateEventPrice(@PathVariable UUID id, @RequestParam BigDecimal price) {
-        try {
-            Event updatedEvent = eventService.updateEventPrice(id, price);
-            return new ResponseEntity<>(updatedEvent, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     // 1. CREATE - POST /api/events
