@@ -85,27 +85,52 @@ public class EventServiceImpl implements EventService {
     // Custom methods
     @Override
     public List<Event> getEventsByTag(String tag) {
-        return List.of();
+        if (tag == null || tag.isBlank()) {
+            return List.of();
+        }
+        return eventRepository.findAll().stream()
+                .filter(event ->
+                        event.getTags() != null &&
+                                event.getTags().stream()
+                                        .anyMatch(t -> t != null && t.equalsIgnoreCase(tag))
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Event> getUpcomingEvents() {
-        return List.of();
+        LocalDateTime now = LocalDateTime.now();
+        return eventRepository.findAll().stream()
+                .filter(e -> e.getEventDateTime() != null && e.getEventDateTime().isAfter(now))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Event> getEventsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
-       return List.of();
+        if (minPrice == null || maxPrice == null) return List.of();
+        return eventRepository.findAll().stream()
+                .filter(e -> e.getTicketPrice() != null &&
+                        e.getTicketPrice().compareTo(minPrice) >= 0 &&
+                        e.getTicketPrice().compareTo(maxPrice) <= 0)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Event> getEventsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return List.of();
+        if (start == null || end == null) return List.of();
+        return eventRepository.findAll().stream()
+                .filter(e -> e.getEventDateTime() != null &&
+                        !e.getEventDateTime().isBefore(start) &&
+                        !e.getEventDateTime().isAfter(end))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Event updateEventPrice(UUID id, BigDecimal newPrice) {
-        return null;
+        if (id == null || newPrice == null) return null;
+        Event event = getEventById(id);
+        event.setTicketPrice(newPrice);
+        return eventRepository.save(event);
     }
 
 }
