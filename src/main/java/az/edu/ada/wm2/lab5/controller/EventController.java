@@ -3,10 +3,13 @@ package az.edu.ada.wm2.lab5.controller;
 import az.edu.ada.wm2.lab5.model.Event;
 import az.edu.ada.wm2.lab5.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +23,7 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
-    //new methods
+
     @GetMapping("/upcoming")
     public ResponseEntity<List<Event>> getUpcomingEvents() {
         try {
@@ -63,6 +66,9 @@ public class EventController {
     public ResponseEntity<Event> updateEventPrice(@PathVariable UUID id, @RequestParam BigDecimal price) {
         try {
             Event updated = eventService.updateEventPrice(id, price);
+            if (updated == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
