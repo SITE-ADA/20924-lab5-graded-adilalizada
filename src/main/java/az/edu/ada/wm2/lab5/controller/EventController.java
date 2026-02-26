@@ -20,6 +20,16 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
+    //new methods
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<Event>> getUpcomingEvents() {
+        try {
+            return new ResponseEntity<>(eventService.getUpcomingEvents(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     // 1. CREATE - POST /api/events
     @PostMapping
