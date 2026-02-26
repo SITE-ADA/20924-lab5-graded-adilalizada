@@ -39,7 +39,14 @@ public class EventController {
         }
     }
 
-
+    @GetMapping("/filter/price")
+    public ResponseEntity<List<Event>> getEventsByPriceRange(@RequestParam BigDecimal min, @RequestParam BigDecimal max) {
+        try {
+            return new ResponseEntity<>(eventService.getEventsByPriceRange(min, max), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
     // 1. CREATE - POST /api/events
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
