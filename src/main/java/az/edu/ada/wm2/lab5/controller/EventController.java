@@ -58,6 +58,19 @@ public class EventController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PatchMapping("/{id}/price")
+    public ResponseEntity<Event> updateEventPrice(@PathVariable UUID id, @RequestParam BigDecimal price) {
+        try {
+            Event updated = eventService.updateEventPrice(id, price);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 1. CREATE - POST /api/events
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
